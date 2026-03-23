@@ -1,0 +1,8 @@
+{
+  "install": {
+    "cmds": ["pip install -r requirements.txt"]
+  },
+  "deploy": {
+    "startCommand": "python rcb-ticket-update.py"
+  }
+}
