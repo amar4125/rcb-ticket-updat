@@ -16,7 +16,7 @@ def send_telegram(msg):
     try:
         if not BOT_TOKEN or not CHAT_ID:
             print("❌ Missing TELEGRAM_TOKEN or CHAT_ID")
-            return
+            return False
 
         url = f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage"
 
@@ -31,8 +31,16 @@ def send_telegram(msg):
 
         print("📩 Telegram status:", response.status_code)
 
+        if response.status_code == 200:
+            print("✅ Telegram notification sent successfully")
+            return True
+        else:
+            print(f"❌ Telegram notification failed — HTTP {response.status_code}: {response.text}")
+            return False
+
     except Exception as e:
         print("❌ Telegram Error:", e)
+        return False
 
 
 def get_page_hash():
@@ -98,11 +106,16 @@ def main():
                 continue
 
             if new_hash != last_hash:
-                print("🚨 WEBSITE CHANGED!")
-                send_telegram(f"🚨 Website changed at {current_time}\n{URL}")
-                last_hash = new_hash
+                print(f"🚨 CHANGE DETECTED at {current_time} — hash changed from {last_hash} to {new_hash}")
+                notification_sent = send_telegram(f"🚨 Website changed at {current_time}\n{URL}")
+                if notification_sent:
+                    print("📬 Hash updated after successful notification")
+                    last_hash = new_hash
+                else:
+                    print("⚠️ Hash NOT updated — notification failed, will retry next cycle")
             else:
                 print("✅ No change detected")
+
 
         except Exception as e:
             print("❌ Loop error:", e)
