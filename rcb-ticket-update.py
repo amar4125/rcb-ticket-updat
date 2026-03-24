@@ -5,7 +5,7 @@ import os
 from datetime import datetime
 
 # 🔐 Environment variables (SET IN RAILWAY)
-URL = "https://shop.royalchallengers.com"
+URL = "https://shop.royalchallengers.com/ticket"
 BOT_TOKEN = os.getenv("TELEGRAM_TOKEN")
 CHAT_ID = os.getenv("CHAT_ID")
 
